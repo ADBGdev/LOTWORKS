@@ -1,0 +1,17 @@
+# Godot 4 generated cache and imports
+.godot/
+.import/
+# Godot C# / Mono (not used by the initial GDScript project)
+.mono/
+# Local editor, OS and scratch files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+.vscode/
+.idea/
+# Runtime-generated data, never commit player state or secrets
+.userdata/
+.env
+.env.*
