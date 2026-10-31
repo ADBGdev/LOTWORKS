@@ -1,37 +1,38 @@
 # LOTWORKS — Agent / contributor instructions
 
 ## Project and priorities
-- Engine: **Godot 4.x**, 2D / Control-centric interface, prefer GDScript for initial prototypes.
-- Solo-indie feasibility and a compelling, repeatable core interaction are more important than visual scope or elaborate architecture.
-- Authoritative design references are `docs/GAME_DESIGN.md`, `docs/AUCTION_DESIGN.md`, `docs/MVP_SCOPE.md`, and `docs/DECISIONS.md`.
-- Distinguish **agreed constraints** from **proposals** and **open decisions**. Do not silently settle an open decision.
+- Engine: **Godot 4.x**, 2D / Control-centric UI, initial language GDScript.
+- Solo-indie feasibility, small system count, and a compelling repeatable interaction take priority over an expansive simulation.
+- Read `docs/DECISIONS.md`, `docs/GAME_DESIGN.md`, `docs/SESSION_DESIGN.md`, `docs/AUCTION_DESIGN.md`, and `docs/MVP_SCOPE.md` before revising game rules.
+- Maintain distinct statuses: **confirmed user constraints**, **design direction**, **illustrative proposals**, **open questions**. Do not silently promote a suggestion to a settled rule.
 
-## Non-negotiable game constraints (current)
-1. Each player operates a mostly independent local economy. Do not introduce a global synchronized market by default.
-2. Primary procurement may be through auctions, with local processing, crafting, repair and inventory management as the main single-player loop.
-3. On listing, an item leaves the seller's inventory immediately.
-4. The server retains a listing **snapshot**, which may participate in multiple independent buyers' auction experiences.
-5. **One listing gives the seller at most one payout.** Replays/purchases never pay the seller again. The exact settlement trigger is undecided.
-6. No simultaneous player presence is required; normal auctions must work asynchronously.
-7. Do not implement global demand-capture competition as the central PvP mode.
-8. Multiple venues (flea market, materials, machinery) are planned; only flea market is required by the first MVP.
-9. Product misrepresentation, advanced inspections, bid policies and anti-abuse details remain proposals; do not treat them as confirmed production mechanics.
+## Agreed design constraints
+1. Individual players have mostly **independent** workshop economies. Global shared demand is not the PvP core.
+2. The auction is the principal potential procurement interface, with other auction venues planned as optional expansions.
+3. **Players bring their own inventory items to an auction, actively use them there, and consume them on use.** The focus is on consumable tactical choices, not permanent equipment or automatic collateral.
+4. Items used in the auction have an actual opportunity cost regardless of winning a lot. Specific effects (appraisal, intel, interference, defense) are **examples only**.
+5. Listing consumes the seller's item **immediately**; server keeps its immutable listing snapshot.
+6. The same snapshot may be encountered/acquired by different players independently.
+7. Seller gets **one payout per listing only**, regardless of repeated purchases. Payout trigger is not settled.
+8. No real-time connection or global single-owner item transfer is required for encounters.
+9. The desired experience has higher PvP presence and **extraction-style tension**, but **loot loss, withdrawal, session failure and risk escalation are not defined yet**. Do not invent them as agreed mechanics.
+10. No return to dungeon/ecosystem subsystems in current MVP; simplify rather than add extra game modes.
 
 ## Engineering boundaries
-- Keep items, inventory, auction listing snapshots, and financial settlement as separate domain concepts.
-- Use deterministic, testable business rules for item transformation and auction resolution. Avoid making an LLM an economic arbiter.
-- Never equate reusable listing data with transferable ownership of a unique item.
-- Ensure payout **exactly once** and distinguish `listing_id` from `buyer_instance_id` in any future persistence layer.
-- Do not add a backend, plugins, third-party dependencies, online services, or generated art without a clear MVP need.
-- Keep initial code small; prefer one working vertical slice over broad speculative systems.
+- Separate item definition, owned instance, brought loadout, item consumption event, reusable listing snapshot, buyer acquisition, and seller settlement.
+- Only a successful deliberate **use** consumes a consumable, subject to future explicit rules. Do not implement implicit loss of every brought item.
+- Keep deterministic, testable state transitions. No LLM arbitrator for item effects or auction outcomes.
+- Model server-facing operations with idempotent consume/list/acquire/settle boundaries; avoid duplicate charges and payouts.
+- No backend, unnecessary dependencies, generated art, advanced crafting simulation or unrelated mechanics before a focused prototype proves the core.
+- Do not interpret auction session = conventional extraction raid as an already established rule.
 
 ## Workflow
-1. Read design/decision docs before modifying game rules.
-2. Make the smallest coherent change and update affected docs.
-3. Validate Godot import / headless run if Godot is available. If unavailable, state that explicitly; never claim testing succeeded.
-4. Add focused tests for deterministic domain rules when implementing them.
-5. Never commit machine-local cache (`.godot/`), secrets, or user save data.
-6. Keep file and directory names in ASCII; write game design docs in Japanese.
+1. Read latest design documents.
+2. Make the smallest coherent change and keep decisions and design docs synchronized.
+3. Validate a Godot import/headless run if the engine is available; otherwise clearly mark untested.
+4. Add focused deterministic tests when introducing business logic.
+5. Never commit `.godot/`, runtime saves, credentials or machine-local files.
+6. Paths in ASCII; gameplay docs in Japanese.
 
-## Definition of first milestone
-A Godot 4 project that opens and shows a starter screen. **This scaffold is not a functional auction MVP.**
+## Current technical state
+Godot starter screen only. No playable auction, consumable items, PvP or extraction mechanics yet.
